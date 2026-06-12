@@ -9,27 +9,63 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+
+ // Calculate total by summing up each item's total price
+ const total = cart.reduce((sum, item) => {
+    // Extract numeric value from item.totalPrice (e.g., "$15.00" -> 15)
+    const itemTotal = parseFloat(item.totalPrice.replace('$', ''));
+    return sum + itemTotal;
+  }, 0);
+  
+  return total.toFixed(2);
   };
 
   const handleContinueShopping = (e) => {
-   
+   // Call the onContinueShopping function passed from parent component (ProductList)
+  onContinueShopping(e);
   };
 
 
 
   const handleIncrement = (item) => {
+   // Calculate new quantity (current + 1)
+  const newQuantity = item.quantity + 1;
+  
+  // Dispatch updateQuantity action to Redux
+  dispatch(updateQuantity({
+    name: item.name,
+    amount: newQuantity
+  })); 
   };
 
   const handleDecrement = (item) => {
-   
+   // Check if current quantity is greater than 1
+  if (item.quantity > 1) {
+    // Decrease quantity by 1
+    const newQuantity = item.quantity - 1;
+    dispatch(updateQuantity({
+      name: item.name,
+      amount: newQuantity
+    }));
+  } else {
+    // If quantity would become 0, remove item from cart entirely
+    dispatch(removeItem(item.name));
+  }
   };
 
   const handleRemove = (item) => {
+    // Dispatch removeItem action with the plant name
+  dispatch(removeItem(item.name));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+     // Extract numeric value from item.cost (e.g., "$15" -> 15)
+  const unitPrice = parseFloat(item.cost.replace('$', ''));
+  // Multiply by quantity
+  const total = unitPrice * item.quantity;
+  // Return formatted to 2 decimal places
+  return total.toFixed(2);
   };
 
   return (
