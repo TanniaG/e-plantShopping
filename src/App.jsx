@@ -4,7 +4,7 @@ import ProductList from './ProductList';
 import './App.css';
 import AboutUs from './AboutUs';
 import { Provider } from 'react-redux';
-import store from './store.jsx';
+import store from './store.js';
 
 function App() {
   
